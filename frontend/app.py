@@ -46,29 +46,23 @@ except ImportError as e:
     raise
 
 API_URL = "http://127.0.0.1:5000"
-
 class CareerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Career Guidance App")
         self.root.geometry("800x600")
         self.root.configure(bg="#f0f8ff")
-        
-        # Style configuration
-        self.style = ttk.Style()
-        self.style.configure('TButton', font=('Helvetica', 12, 'bold'), background='#ff4500', foreground='white')
-        self.style.configure('TLabel', background='#f0f8ff')
-        
-        # Define color scheme
+
         self.colors = {
-            'bg': '#f0f8ff',  # Light blue background
-            'card_bg': '#ffffff',  # White card background
-            'heading': '#4682b4',  # Dark blue for headings
-            'text': '#333333',  # Dark gray for text
-            'accent': '#ff4500'  # Orange for accents
+            'bg': '#f0f8ff',
+            'card_bg': '#ffffff',
+            'heading': '#4682b4',
+            'text': '#333333',
+            'accent': '#ff4500'
         }
-        
+
         self.username = ""
+        self.password = ""
         self.create_login_screen()
 
     def clear_screen(self):
@@ -78,136 +72,245 @@ class CareerApp:
     def create_nav_bar(self):
         nav_frame = tk.Frame(self.root, bg=self.colors['heading'], height=50)
         nav_frame.pack(fill='x', side='top')
-        
-        tk.Button(nav_frame, text="Back to Home", command=self.show_dashboard, 
-                 bg=self.colors['accent'], fg="white", font=('Helvetica', 10, 'bold'),
-                 relief='flat', bd=0).pack(side='left', padx=10, pady=5)
+        tk.Button(nav_frame, text="Back to Home", command=self.show_dashboard,
+                  bg=self.colors['accent'], fg="white", font=('Helvetica', 10, 'bold'),
+                  relief='flat', bd=0).pack(side='left', padx=10, pady=5)
 
     def create_login_screen(self):
         self.clear_screen()
-        
         main_frame = tk.Frame(self.root, bg=self.colors['bg'])
         main_frame.pack(expand=True, fill='both', padx=20, pady=20)
-        
+
         login_card = tk.Frame(main_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
         login_card.pack(pady=50, padx=50, fill='both')
         login_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
         
-        tk.Label(login_card, text="Career Guidance", font=("Helvetica", 24, "bold"), 
-                bg=self.colors['card_bg'], fg=self.colors['heading']).pack(pady=30)
-        
-        tk.Label(login_card, text="Username:", font=("Helvetica", 12), 
-                bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=5)
-        self.username_entry = ttk.Entry(login_card, font=("Helvetica", 12), width=30)
+        logo_image = Image.open("logo2.png")  # Ensure the image file is present
+        logo_image = logo_image.resize((250, 80))  # Resize as required
+        logo_photo = ImageTk.PhotoImage(logo_image)
+        logo_label = tk.Label(login_card, image=logo_photo, bg=self.colors['card_bg'])
+        logo_label.image = logo_photo  # Keep a reference to prevent garbage collection
+        logo_label.pack(pady=10)
+
+        tk.Label(login_card, text="Career Guidance Login", font=("Helvetica", 24, "bold"),
+                 bg=self.colors['card_bg'], fg=self.colors['heading']).pack(pady=20)
+
+        tk.Label(login_card, text="Username:", font=("Helvetica", 12),
+                 bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=5)
+        self.username_entry = tk.Entry(login_card, font=("Helvetica", 12), width=30)
         self.username_entry.pack(pady=5)
+
+        tk.Label(login_card, text="Password:", font=("Helvetica", 12),
+                 bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=5)
+        self.password_entry = tk.Entry(login_card, font=("Helvetica", 12), width=30, show='*')
+        self.password_entry.pack(pady=5)
+
+        blue = "#1E90FF"      # Dodger Blue
+
+     # Login Page Buttons
+        tk.Button(login_card, text="Login", command=self.login,
+          bg=blue, fg="white", font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10)
+        tk.Button(login_card, text="Signup", command=self.create_signup_screen,
+          bg=blue, fg="white", font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=5)
         
-        ttk.Button(login_card, text="Login", command=self.login, 
-                  style='TButton').pack(pady=20)
+    def create_signup_screen(self):
+        self.clear_screen()
+        main_frame = tk.Frame(self.root, bg=self.colors['bg'])
+        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
+
+        signup_card = tk.Frame(main_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
+        signup_card.pack(pady=50, padx=50, fill='both')
+        signup_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
+        
+        # Load and place logo image
+        logo_image = Image.open("logo1.png")  # Ensure the image file is present
+        logo_image = logo_image.resize((250, 80))  # Resize as you wish
+        logo_photo = ImageTk.PhotoImage(logo_image)
+        logo_label = tk.Label(signup_card, image=logo_photo, bg=self.colors['card_bg'])
+        logo_label.image = logo_photo  # Keep a reference
+        logo_label.pack(pady=10)
+
+
+        tk.Label(signup_card, text="Signup Page", font=("Helvetica", 24, "bold"),
+                 bg=self.colors['card_bg'], fg=self.colors['heading']).pack(pady=20)
+
+        tk.Label(signup_card, text="New Username:", font=("Helvetica", 12),
+                 bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=5)
+        self.new_username_entry = tk.Entry(signup_card, font=("Helvetica", 12), width=30)
+        self.new_username_entry.pack(pady=5)
+
+        tk.Label(signup_card, text="New Password:", font=("Helvetica", 12),
+                 bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=5)
+        self.new_password_entry = tk.Entry(signup_card, font=("Helvetica", 12), width=30, show='*')
+        self.new_password_entry.pack(pady=5)
+       
+        blue = "#1E90FF"      # Dodger Blue
+
+   # Signup Page Buttons
+        tk.Button(signup_card, text="Create Account", command=self.signup,
+          bg=blue, fg="white", font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10)
+        tk.Button(signup_card, text="Back to Login", command=self.create_login_screen,
+          bg=blue, fg="white", font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=5)
 
     def login(self):
         self.username = self.username_entry.get()
-        if not self.username:
-            messagebox.showerror("Error", "Please enter a username")
+        self.password = self.password_entry.get()
+        if not self.username or not self.password:
+            messagebox.showerror("Error", "Please enter both username and password")
             return
         self.show_dashboard()
 
+    def signup(self):
+        new_username = self.new_username_entry.get()
+        new_password = self.new_password_entry.get()
+        if not new_username or not new_password:
+            messagebox.showerror("Error", "Please fill all fields")
+            return
+        messagebox.showinfo("Success", f"Account created for {new_username}")
+        self.create_login_screen()
+
+
     def show_dashboard(self):
-        self.clear_screen()
-        self.create_nav_bar()
-        
-        main_frame = tk.Frame(self.root, bg=self.colors['bg'])
-        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
-        
-        tk.Label(main_frame, text=f"Welcome {self.username}!", 
-                font=("Helvetica", 20, "bold"), bg=self.colors['bg'], 
-                fg=self.colors['heading']).pack(pady=20)
-        
-        button_frame = tk.Frame(main_frame, bg=self.colors['bg'])
-        button_frame.pack(pady=30)
-        
-        ttk.Button(button_frame, text="Upload Resume", 
-                  command=self.show_resume_upload,
-                  style='TButton').pack(pady=10, padx=20, fill='x')
-        
-        ttk.Button(button_frame, text="Take Aptitude Test", 
-                  command=self.show_aptitude_test,
-                  style='TButton').pack(pady=10, padx=20, fill='x')
+      self.clear_screen()
+      self.create_nav_bar()
+      main_frame = tk.Frame(self.root, bg=self.colors['bg'])
+      main_frame.pack(expand=True, fill='both', padx=20, pady=20)
 
-        ttk.Button(button_frame, text="Start Behavior Test", 
-                  command=self.start_behavior_test,
-                  style='TButton').pack(pady=10, padx=20, fill='x')
+      dashboard_card = tk.Frame(main_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
+      dashboard_card.pack(pady=30, padx=50, fill='both')
+      dashboard_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
 
+      tk.Label(dashboard_card, text=f"Welcome {self.username}!", 
+             font=("Helvetica", 22, "bold"), bg=self.colors['card_bg'], 
+             fg=self.colors['heading']).pack(pady=10)
+
+    # ✅ Display the logo image here
+      logo_image = Image.open("logo.png")  # Logo must be in the same folder
+      logo_image = logo_image.resize((400, 200))  # Resize as needed
+      logo_photo = ImageTk.PhotoImage(logo_image)
+      logo_label = tk.Label(dashboard_card, image=logo_photo, bg=self.colors['card_bg'])
+      logo_label.image = logo_photo  # Prevent garbage collection
+      logo_label.pack(pady=10)
+      
+      
+    # App summary
+      summary_text = ("This Career Guidance App helps you discover suitable career paths "
+                    "through resume analysis, aptitude assessment, and behavior tracking. "
+                    "Start exploring your strengths now!")
+      tk.Label(dashboard_card, text=summary_text, wraplength=500, justify='center',
+             font=("Helvetica", 12), bg=self.colors['card_bg'], fg=self.colors['text']).pack(pady=10)
+ 
+      button_frame = tk.Frame(dashboard_card, bg=self.colors['card_bg'])
+      button_frame.pack(pady=10)
+
+      sky_blue = "#87CEEB"   # Sky Blue
+      red_color = "#FF6347"  # Tomato Red
+
+      tk.Button(button_frame, text="Upload Resume", 
+              command=self.show_resume_upload, 
+              bg=sky_blue, fg="white", 
+              font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10, padx=20, fill='x')
+
+      tk.Button(button_frame, text="Take Aptitude Test", 
+              command=self.show_aptitude_test, 
+              bg=sky_blue, fg="white", 
+              font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10, padx=20, fill='x')
+
+      tk.Button(button_frame, text="Start Behavior Test", 
+              command=self.start_behavior_test, 
+              bg=sky_blue, fg="white", 
+              font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10, padx=20, fill='x')
+
+      tk.Button(button_frame, text="Back to Login", 
+              command=self.create_login_screen, 
+              bg=red_color, fg="white",  
+              font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=10, padx=20, fill='x')
     def show_resume_upload(self):
-        self.clear_screen()
-        self.create_nav_bar()
-        
-        main_frame = tk.Frame(self.root, bg=self.colors['bg'])
-        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
-        
-        tk.Label(main_frame, text="Upload Your Resume", 
-                font=("Helvetica", 18, "bold"), bg=self.colors['bg'], 
-                fg=self.colors['heading']).pack(pady=20)
-        
-        upload_card = tk.Frame(main_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
-        upload_card.pack(pady=20, padx=50, fill='both')
-        upload_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
-        
-        ttk.Button(upload_card, text="Select Resume (PDF)", 
-                  command=self.upload_resume,
-                  style='TButton').pack(pady=30)
+       self.clear_screen()
+       self.create_nav_bar()
+      
+       main_frame = tk.Frame(self.root, bg=self.colors['bg'])
+       main_frame.pack(expand=True, fill='both', padx=20, pady=20)
+
+       tk.Label(main_frame, text="Upload Your Resume", 
+             font=("Helvetica", 20, "bold"), bg=self.colors['bg'], 
+             fg=self.colors['heading']).pack(pady=20)
+       upload_card = tk.Frame(main_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
+       upload_card.pack(pady=20, padx=50, fill='both')
+       upload_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
+
+       tk.Label(upload_card, text="Select your Resume in PDF format and upload for analysis.",
+             font=("Helvetica", 12), bg=self.colors['card_bg'], fg=self.colors['text'], wraplength=400, justify='center').pack(pady=10)
+
+       tk.Button(upload_card, text="Select Resume (PDF)", 
+              command=self.upload_resume,
+              bg="#87CEEB", fg="white", 
+              font=("Helvetica", 12, "bold"), relief='flat', bd=0).pack(pady=30)
 
     def show_aptitude_test(self):
-        self.clear_screen()
-        self.create_nav_bar()
-        
-        main_frame = tk.Frame(self.root, bg=self.colors['bg'])
-        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
-        
-        tk.Label(main_frame, text="Aptitude Test", 
-                font=("Helvetica", 18, "bold"), bg=self.colors['bg'], 
-                fg=self.colors['heading']).pack(pady=20)
-        
-        canvas = tk.Canvas(main_frame, bg=self.colors['bg'], highlightthickness=0)
-        scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas, bg=self.colors['bg'])
-        
-        scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-        )
-        
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-        
-        canvas.pack(side="left", fill="both", expand=True, padx=10)
-        scrollbar.pack(side="right", fill="y")
-        
-        question_card = tk.Frame(scrollable_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
-        question_card.pack(pady=10, padx=20, fill='both')
-        question_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
-        
-        self.questions = [
-            "Do you enjoy solving logical problems?",
-            "Are you comfortable communicating your ideas clearly?",
-            "Do you like working with data and analysis?",
-            "Are you interested in leading projects or teams?",
-            "Do you enjoy coding and building software applications?",
-            "Are you familiar with basic programming concepts?",
-            "Can you explain technical concepts to non-technical people?"
-        ]
-        
-        self.answers = []
-        for i, q in enumerate(self.questions):
-            tk.Label(question_card, text=f"{i+1}. {q}", bg=self.colors['card_bg'], 
-                    font=("Helvetica", 11), fg=self.colors['text'], wraplength=600, 
-                    justify='left').pack(anchor='w', padx=10, pady=5)
-            entry = ttk.Entry(question_card, width=60)
-            entry.pack(pady=5, padx=10)
-            self.answers.append(entry)
-        
-        ttk.Button(question_card, text="Submit", command=self.submit_all, 
-                  style='TButton').pack(pady=20)
+     self.clear_screen()
+     self.create_nav_bar()
 
+     main_frame = tk.Frame(self.root, bg=self.colors['bg'])
+     main_frame.pack(expand=True, fill='both')
+
+     tk.Label(main_frame, text="Aptitude Test", 
+             font=("Helvetica", 20, "bold"), bg=self.colors['bg'], 
+             fg=self.colors['heading']).pack(pady=10)
+
+     tk.Label(main_frame, text="Please answer all questions honestly to get accurate career suggestions.",
+             font=("Helvetica", 11, "italic"), bg=self.colors['bg'], fg=self.colors['text']).pack(pady=5)
+
+     canvas = tk.Canvas(main_frame, bg=self.colors['bg'], highlightthickness=0)
+     scrollbar = tk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+     canvas.configure(yscrollcommand=scrollbar.set)
+
+     canvas.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+     scrollbar.pack(side="right", fill="y")
+
+     scrollable_frame = tk.Frame(canvas, bg=self.colors['bg'])
+     canvas.create_window((canvas.winfo_reqwidth() // 2, 0), window=scrollable_frame, anchor="n")
+
+
+     scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
+     question_card = tk.Frame(scrollable_frame, bg=self.colors['card_bg'], bd=2, relief='flat')
+     question_card.pack(pady=20, padx=100)  # Adds horizontal padding to center
+     question_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
+
+
+
+     self.questions = [
+        "Do you enjoy solving logical problems?",
+        "Are you comfortable communicating your ideas clearly?",
+        "Do you like working with data and analysis?",
+        "Are you interested in leading projects or teams?",
+        "Do you enjoy coding and building software applications?",
+        "Are you familiar with basic programming concepts?",
+        "Can you explain technical concepts to non-technical people?"
+    ]
+
+     self.answers = []
+     for i, q in enumerate(self.questions):
+        q_frame = tk.Frame(question_card, bg=self.colors['card_bg'])
+        q_frame.pack(pady=10, fill='x')  # Fills horizontally
+
+        tk.Label(q_frame, text=f"{i+1}. {q}", bg=self.colors['card_bg'],
+                 font=("Helvetica", 11), fg=self.colors['text'], wraplength=500,
+                 justify='center').pack(pady=5)
+
+        # Center the entry using 'place' in middle
+        entry = tk.Entry(q_frame, width=50, font=("Helvetica", 10), relief='solid', bd=1)
+        entry.pack(pady=5)
+        self.answers.append(entry)
+
+    # Center the Submit button inside card
+     tk.Button(question_card, text="Submit", command=self.submit_all,
+              bg="#87CEEB", fg="white", font=("Helvetica", 12, "bold"),
+              relief='flat', bd=0).pack(pady=20)
+     
     def start_behavior_test(self):
         self.clear_screen()
         self.create_nav_bar()
@@ -226,11 +329,16 @@ class CareerApp:
         self.video_label = tk.Label(self.main_frame, bg=self.colors['bg'])
         self.video_label.pack(pady=10)
 
-        # Create a "Stop Analysis" button, initially disabled
-        self.stop_button = ttk.Button(self.main_frame, text="Stop Analysis", 
-                                     command=self.stop_and_process, 
-                                     style='TButton', state='disabled')
+        # Replace your Stop Analysis button creation with this:
+
+        self.stop_button = tk.Button(self.main_frame, text="Stop Analysis",
+                             command=self.stop_and_process,
+                             bg="#87CEEB", fg="white",
+                             font=("Helvetica", 12, "bold"),
+                             relief='raised', bd=0,
+                             state='disabled')  # initially disabled but visible
         self.stop_button.pack(pady=10)
+
 
         # Initialize webcam and tracker
         try:
@@ -563,4 +671,4 @@ class CareerApp:
 if __name__ == '__main__':
     root = tk.Tk()
     app = CareerApp(root)
-    root.mainloop()
+    root.mainloop()      
