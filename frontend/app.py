@@ -85,7 +85,7 @@ class CareerApp:
         login_card.pack(pady=50, padx=50, fill='both')
         login_card.configure(highlightbackground=self.colors['heading'], highlightthickness=2)
         
-        logo_image = Image.open("logo2.png")  # Ensure the image file is present
+        logo_image = Image.open("logo1.png")  # Ensure the image file is present
         logo_image = logo_image.resize((250, 80))  # Resize as required
         logo_photo = ImageTk.PhotoImage(logo_image)
         logo_label = tk.Label(login_card, image=logo_photo, bg=self.colors['card_bg'])
